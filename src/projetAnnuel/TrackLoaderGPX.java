@@ -1,5 +1,6 @@
 package projetAnnuel;
 
+import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -10,18 +11,23 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Main {
-    public static void main(String[] args) {
-        /*SAXParserFactory factory = SAXParserFactory.newInstance();
-        SaxGPSData handler = new SaxGPSData();
+public class TrackLoaderGPX extends DefaultHandler implements TrackLoader {
+
+    private GPXHandler handler;
+
+    public TrackLoaderGPX(String filePath) {
+        SAXParserFactory factory = SAXParserFactory.newInstance();
+        handler = new GPXHandler();
         try {
             SAXParser saxParser = factory.newSAXParser();
-            saxParser.parse("ProjetAnnuel/ski231206.gpx", handler);
+            saxParser.parse(filePath, handler);
         } catch (ParserConfigurationException | SAXException | IOException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+        }
+    }
 
-        TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX("ProjetAnnuel/ski231206.gpx");
-        System.out.println(trackLoaderGPX.loadTrack().toString());
+    @Override
+    public Track loadTrack() {
+        return handler.getTrack();
     }
 }

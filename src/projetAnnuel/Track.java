@@ -4,28 +4,31 @@ import java.util.ArrayList;
 
 public class Track {
 
-    // Liste de TrackSegments
-    private ArrayList<TrackSegment> trackSegments;
-    private String name;
+    // Liste de TrackPoints
+    private ArrayList<TrackPoint> trackPoints;
 
     /**
      * Constructor.
      */
-    public Track(String name) {
-        this.name = name;
-        this.trackSegments = new ArrayList<>();
+    public Track() {
+        this.trackPoints = new ArrayList<>();
     }
 
     /**
-     * Permet l'ajout d'un TrackSegment à la liste
+     * Permet l'ajout d'un TrackPoint à la liste
      *
-     * @param trackSegment (required) une instance de la classe TrackSegment
+     * @param trackPoint (required) une instance de la classe TrackPoint
      */
-    public void addTrackPoint(TrackSegment trackSegment) {
-        trackSegments.add(trackSegment);
+    public void addTrackPoint(TrackPoint trackPoint) {
+        trackPoints.add(trackPoint);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public String toString() {
+        String result = "";
+        for (TrackPoint trackPoint : trackPoints) {
+            result += trackPoint.toString();
+        }
+        return result;
     }
 }

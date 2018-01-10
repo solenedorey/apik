@@ -44,7 +44,7 @@ public class SaxGPSData extends DefaultHandler {
                 }
                 result += atts.getQName(i) + " = \"" + atts.getValue(i) + "\"\n";
             }
-            System.out.println(result);
+            System.out.print(result);
         }
     }
 
@@ -68,7 +68,7 @@ public class SaxGPSData extends DefaultHandler {
         if (lifo.endsWith(timeTag)) {
             if (!s.equals("")) {
                 Calendar newTime = javax.xml.bind.DatatypeConverter.parseDateTime(s);
-                System.out.println(newTime.getTime());
+                System.out.println(newTime.getTime() + "\n");
             }
         }
         if (lifo.endsWith(trackPointTag)) {

@@ -4,6 +4,12 @@ import java.util.Date;
 
 public class TrackPoint {
 
+    /**
+     * Attributs
+     */
+
+    // Identifiant du trackPoint
+    private int id;
     // Latitude degrés décimaux, WGS84
     private double latitude;
     // Longitude degrés décimaux, WGS84
@@ -12,9 +18,11 @@ public class TrackPoint {
     private double elevation;
     // Horodatage
     private Date time;
+    // Identifiant du prochain trackPoint
+    private int nextTrackPointId;
 
     /**
-     * Constructor.
+     * Constructeur
      */
     public TrackPoint() {
         this.latitude = 0D;
@@ -24,7 +32,7 @@ public class TrackPoint {
     }
 
     /**
-     * Constructor.
+     * Constructeur
      *
      * @param latitude (required) Latitude
      * @param longitude (required) Longitude
@@ -38,8 +46,9 @@ public class TrackPoint {
         this.time = time;
     }
 
-    // Getters
-
+    /**
+     * Getters
+     */
     public double getLatitude() {
         return latitude;
     }
@@ -56,7 +65,9 @@ public class TrackPoint {
         return time;
     }
 
-    // Setters
+    /**
+     * Setters
+     */
 
     public void setLatitude(double latitude) {
         this.latitude = latitude;
@@ -72,5 +83,10 @@ public class TrackPoint {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    @Override
+    public String toString() {
+        return "TrackPoint :\n\tLatitude : " + latitude + "\n\tLongitude : " + longitude + "\n\tAltitude : " + elevation + "\n\tHorodatage : " + time + "\n";
     }
 }
