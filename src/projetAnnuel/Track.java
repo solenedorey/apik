@@ -25,10 +25,22 @@ public class Track {
 
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (TrackPoint trackPoint : trackPoints) {
-            result += trackPoint.toString();
+            result.append(trackPoint.toString());
         }
-        return result;
+        return result.toString();
+    }
+
+    public ArrayList<TrackPoint> getMinAndMaxLocalPeaks() {
+        ArrayList<TrackPoint> minAndMaxPeaks = new ArrayList<>();
+        minAndMaxPeaks.add(trackPoints.get(0));
+        for (int i = 1; i < trackPoints.size() - 1; i++) {
+            if ((trackPoints.get(i - 1).getElevation() < trackPoints.get(i).getElevation() && trackPoints.get(i).getElevation() > trackPoints.get(i + 1).getElevation()) || (trackPoints.get(i - 1).getElevation() > trackPoints.get(i).getElevation() && trackPoints.get(i).getElevation() < trackPoints.get(i + 1).getElevation())) {
+                minAndMaxPeaks.add(trackPoints.get(i));
+            }
+        }
+        minAndMaxPeaks.add(trackPoints.get(trackPoints.size()-1));
+        return minAndMaxPeaks;
     }
 }

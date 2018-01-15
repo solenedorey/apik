@@ -22,6 +22,7 @@ public class Main {
         }*/
 
         TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX("ProjetAnnuel/ski231206.gpx");
-        System.out.println(trackLoaderGPX.loadTrack().toString());
+        Track track = trackLoaderGPX.loadTrack();
+        System.out.println(track.getMinAndMaxLocalPeaks());
     }
 }
