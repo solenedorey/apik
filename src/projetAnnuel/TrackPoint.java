@@ -21,6 +21,8 @@ public class TrackPoint {
     private Date time;
     // Identifiant du prochain trackPoint
     private int nextTrackPointId;
+    // Distance avec le prochain point
+    private Double distanceToNextPoint;
 
     /**
      * Constructeur
@@ -32,6 +34,7 @@ public class TrackPoint {
         this.elevation = 0D;
         this.nextTrackPointId = COUNT;
         this.time = new Date();
+        this.distanceToNextPoint = null;
     }
 
     /**
@@ -88,8 +91,12 @@ public class TrackPoint {
         this.time = time;
     }
 
+    public void setDistanceToNextPoint(Double distanceToNextPoint) {
+        this.distanceToNextPoint = distanceToNextPoint;
+    }
+
     @Override
     public String toString() {
-        return "TrackPoint :\n\tId : " + id + "\n\tNextTrackPointId : " + nextTrackPointId + "\n\tLatitude : " + latitude + "\n\tLongitude : " + longitude + "\n\tAltitude : " + elevation + "\n\tHorodatage : " + time + "\n";
+        return "TrackPoint :\n\tId : " + id + "\n\tNextTrackPointId : " + nextTrackPointId + "\n\tDistanceToNextTrackPoint : " + distanceToNextPoint + "\n\tLatitude : " + latitude + "\n\tLongitude : " + longitude + "\n\tAltitude : " + elevation + "\n\tHorodatage : " + time + "\n";
     }
 }

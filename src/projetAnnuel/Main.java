@@ -2,7 +2,6 @@ package projetAnnuel;
 
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -23,6 +22,7 @@ public class Main {
 
         TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX("ProjetAnnuel/ski231206.gpx");
         Track track = trackLoaderGPX.loadTrack();
+        track.acquaintDistanceBetweenTrackpoints();
         System.out.println(track.getMinAndMaxLocalPeaks());
     }
 }
