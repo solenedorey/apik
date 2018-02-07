@@ -22,7 +22,14 @@ public class Main {
 
         TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX("ProjetAnnuel/ski231206.gpx");
         Track track = trackLoaderGPX.loadTrack();
-        track.acquaintDistanceBetweenTrackpoints();
-        System.out.println(track.getMinAndMaxLocalPeaks());
+
+        System.out.println(track);
+        //System.out.println(track.getMinAndMaxLocalPeaks().size());
+
+        /*ApikGUI apikGUI = new ApikGUI(track);*/
+
+        /*ApikGUI apikGUI = new ApikGUI();*/
+
+        /*TrackChart trackChart = new TrackChart(track.getTrackPoints());*/
     }
 }

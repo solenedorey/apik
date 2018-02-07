@@ -1,9 +1,6 @@
 package projetAnnuel;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -11,7 +8,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TrackLoaderGPX extends DefaultHandler implements TrackLoader {
+public class TrackLoaderGPX extends TrackLoader {
 
     private GPXHandler handler;
 
@@ -27,7 +24,7 @@ public class TrackLoaderGPX extends DefaultHandler implements TrackLoader {
     }
 
     @Override
-    public Track loadTrack() {
+    public Track loadTrackImpl() {
         return handler.getTrack();
     }
 }

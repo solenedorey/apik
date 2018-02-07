@@ -1,6 +1,14 @@
 package projetAnnuel;
 
-public interface TrackLoader {
+public abstract class TrackLoader {
 
-    public Track loadTrack();
+    // Utilisation du patron Template Method
+    public Track loadTrack()
+    {
+        Track t = loadTrackImpl();
+        t.prepare();
+        return t;
+    }
+
+    public abstract Track loadTrackImpl();
 }

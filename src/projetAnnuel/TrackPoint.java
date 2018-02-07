@@ -22,7 +22,17 @@ public class TrackPoint {
     // Identifiant du prochain trackPoint
     private int nextTrackPointId;
     // Distance avec le prochain point
-    private Double distanceToNextPoint;
+    private double distanceToNextPoint;
+    // Type de points
+    private TrackPointCategory trackPointCategory;
+
+    enum TrackPointCategory {
+        LocalMinimum,
+        LocalMaximum,
+        Uphill,
+        Downhill,
+        Flat
+    }
 
     /**
      * Constructeur
@@ -34,7 +44,6 @@ public class TrackPoint {
         this.elevation = 0D;
         this.nextTrackPointId = COUNT;
         this.time = new Date();
-        this.distanceToNextPoint = null;
     }
 
     /**
@@ -71,6 +80,14 @@ public class TrackPoint {
         return time;
     }
 
+    public double getDistanceToNextPoint() {
+        return distanceToNextPoint;
+    }
+
+    public TrackPointCategory getTrackPointCategory() {
+        return trackPointCategory;
+    }
+
     /**
      * Setters
      */
@@ -91,12 +108,33 @@ public class TrackPoint {
         this.time = time;
     }
 
-    public void setDistanceToNextPoint(Double distanceToNextPoint) {
+    public void setDistanceToNextPoint(double distanceToNextPoint) {
         this.distanceToNextPoint = distanceToNextPoint;
+    }
+
+    public void setTrackPointCategory(TrackPointCategory trackPointCategory) {
+        this.trackPointCategory = trackPointCategory;
     }
 
     @Override
     public String toString() {
-        return "TrackPoint :\n\tId : " + id + "\n\tNextTrackPointId : " + nextTrackPointId + "\n\tDistanceToNextTrackPoint : " + distanceToNextPoint + "\n\tLatitude : " + latitude + "\n\tLongitude : " + longitude + "\n\tAltitude : " + elevation + "\n\tHorodatage : " + time + "\n";
+        return "TrackPoint :" +
+                "\n\tId : " +
+                id +
+                /*"\n\tNextTrackPointId : " +
+                nextTrackPointId +
+                "\n\tDistanceToNextTrackPoint : " +
+                distanceToNextPoint +
+                "\n\tLatitude : " +
+                latitude +
+                "\n\tLongitude : " +
+                longitude +*/
+                "\n\tAltitude : " +
+                elevation +
+                /*"\n\tHorodatage : " +
+                time +*/
+                "\n\tCatégorie : " +
+                trackPointCategory +
+                "\n";
     }
 }
