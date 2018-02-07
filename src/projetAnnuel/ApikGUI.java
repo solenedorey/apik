@@ -32,6 +32,7 @@ public class ApikGUI extends JFrame implements ActionListener {
         cp.add(trackChart);
 
         pack();
+        setLocationRelativeTo(null);
         setVisible(true);
     }
 
