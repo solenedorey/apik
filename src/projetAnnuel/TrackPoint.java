@@ -131,8 +131,8 @@ public class TrackPoint {
                 longitude +*/
                 "\n\tAltitude : " +
                 elevation +
-                /*"\n\tHorodatage : " +
-                time +*/
+                "\n\tHorodatage : " +
+                time +
                 "\n\tCatégorie : " +
                 trackPointCategory +
                 "\n";

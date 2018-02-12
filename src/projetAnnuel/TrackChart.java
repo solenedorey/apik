@@ -11,8 +11,8 @@ public class TrackChart extends JPanel implements ModelListener {
     private Track track;
     private double metersToPixelsX;
     private double metersToPixelsY;
-    public static int WIDTH = 1800;
-    public static int HEIGHT = 900;
+    public static int WIDTH = 800;
+    public static int HEIGHT = 400;
 
     public TrackChart(Track track) {
         this.track = track;
@@ -29,6 +29,8 @@ public class TrackChart extends JPanel implements ModelListener {
         HEIGHT = getHeight();
         metersToPixelsX = WIDTH / track.getTotalDistance();
         metersToPixelsY = HEIGHT / track.getMaxElevation();
+        /*double amplitude = track.getMaxElevation() - track.getMinElevation();
+        metersToPixelsY = HEIGHT / amplitude;*/
 
         /*Color color;
         ArrayList<TrackPoint> trackPoints = track.getTrackPoints();
@@ -58,10 +60,10 @@ public class TrackChart extends JPanel implements ModelListener {
                 x1 = x2;
                 y1 = y2;
             } else {
-                y1 = HEIGHT - trackPoints.get(i).getElevation() * metersToPixelsY;
+                y1 = HEIGHT - (trackPoints.get(i).getElevation() * metersToPixelsY);
             }
             x2 = x1 + trackPoints.get(i).getDistanceToNextPoint() * metersToPixelsX;
-            y2 = HEIGHT - trackPoints.get(i + 1).getElevation() * metersToPixelsY;
+            y2 = HEIGHT - (trackPoints.get(i + 1).getElevation() * metersToPixelsY);
             graphics2D.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
             /*if (trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.LocalMaximum || trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.Downhill) {
                 color = Color.blue;

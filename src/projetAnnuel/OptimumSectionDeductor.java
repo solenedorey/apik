@@ -20,14 +20,14 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
             boolean isThereSomeoneHigherThanMeAfter = false;
             boolean isThereSomeoneLowerThanMeAfter = false;
             int j = i - 1;
-            while (distanceBefore <= 100.0) {
+            while (distanceBefore <= 300.0) {
                 if (j < 0) {
                     break;
                 }
                 if (!isThereSomeoneHigherThanMeBefore && trackPoints.get(j).getElevation() >= currentElevation) {
                     isThereSomeoneHigherThanMeBefore = true;
                 }
-                if (!isThereSomeoneLowerThanMeBefore && trackPoints.get(j).getElevation() <= currentElevation) {
+                if (!isThereSomeoneLowerThanMeBefore && trackPoints.get(j).getElevation() < currentElevation) {
                     isThereSomeoneLowerThanMeBefore = true;
                 }
                 /*if (isThereSomeoneLowerThanMe && !isThereSomeoneHigherThanMe) {
@@ -47,11 +47,11 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
                 tempList.remove(tempList.get(tempList.size() - 1));
             }*/
             int k = i + 1;
-            while (distanceAfter <= 100.0) {
+            while (distanceAfter <= 300.0) {
                 if (k >= trackPoints.size()) {
                     break;
                 }
-                if (!isThereSomeoneHigherThanMeAfter && trackPoints.get(k).getElevation() >= currentElevation) {
+                if (!isThereSomeoneHigherThanMeAfter && trackPoints.get(k).getElevation() > currentElevation) {
                     isThereSomeoneHigherThanMeAfter = true;
                 }
                 if (!isThereSomeoneLowerThanMeAfter && trackPoints.get(k).getElevation() <= currentElevation) {
