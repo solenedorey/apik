@@ -1,11 +1,18 @@
 package projetAnnuel;
 
+import projetAnnuel.events.AbstractListenableModel;
+
 import java.util.ArrayList;
 
-public class Track {
+public class Track extends AbstractListenableModel {
+
+    private SectionDeductorStrategy sectionDeductorStrategy;
 
     // Liste de TrackPoints
     private ArrayList<TrackPoint> trackPoints;
+    // Liste des sections
+    /*private ArrayList<TrackSection> trackSections;*/
+    private ArrayList<TrackPoint> trackSections;
     // L'altitude maximum
     private double maxElevation;
     // L'altitude minimum
@@ -16,8 +23,9 @@ public class Track {
     /**
      * Constructor.
      */
-    public Track() {
+    public Track(SectionDeductorStrategy sectionDeductorStrategy) {
         this.trackPoints = new ArrayList<>();
+        this.sectionDeductorStrategy = sectionDeductorStrategy;
     }
 
     /**
@@ -36,6 +44,18 @@ public class Track {
      */
     public ArrayList<TrackPoint> getTrackPoints() {
         return trackPoints;
+    }
+
+    /**
+     * Retourne la liste des TrackSections
+     *
+     * @return une ArrayList : l'ensemble des TrackSections déduites
+     */
+    /*public ArrayList<TrackSection> getTrackSections() {
+        return trackSections;
+    }*/
+    public ArrayList<TrackPoint> getTrackSections() {
+        return trackSections;
     }
 
     /**
@@ -84,6 +104,8 @@ public class Track {
         computeTotalDistance();
         determineMaxAndMinElevation();
 
+        trackSections = sectionDeductorStrategy.deduceSections(this);
+        fireChanges();
     }
 
     /**
@@ -189,18 +211,30 @@ public class Track {
     private double meterDistanceBetweenPoints(double lat1, double lon1, double lat2, double lon2)
     {
         double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
+        double dist = Math.sin(decimalDegreesToRadians(lat1)) * Math.sin(decimalDegreesToRadians(lat2)) + Math.cos(decimalDegreesToRadians(lat1)) * Math.cos(decimalDegreesToRadians(lat2)) * Math.cos(decimalDegreesToRadians(theta));
         dist = Math.acos(dist);
-        dist = rad2deg(dist);
-        dist *= 60 * 1.1515 * 1.609344;
+        dist = radiansToDecimalDegrees(dist);
+        dist *= 60 * 1.1515 * 1609.344;
         return dist;
     }
 
-    private double deg2rad(double deg) {
-        return (deg * Math.PI / 180.0);
+    /**
+     * Permet la conversion de degrés décimaux en radians
+     *
+     * @param decimalDegrees double la valeur en degrés décimaux à convertir
+     * @return double : la valeur convertie en radians
+     */
+    private double decimalDegreesToRadians(double decimalDegrees) {
+        return (decimalDegrees * Math.PI / 180.0);
     }
 
-    private double rad2deg(double rad) {
-        return (rad * 180 / Math.PI);
+    /**
+     * Permet la conversion de radians en degrés décimaux
+     *
+     * @param radians double la valeur en radians à convertir
+     * @return double : la valeur convertie en degrés décimaux
+     */
+    private double radiansToDecimalDegrees(double radians) {
+        return (radians * 180 / Math.PI);
     }
 }

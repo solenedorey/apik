@@ -18,7 +18,7 @@ public class GPXHandler extends DefaultHandler {
         timeTag.push("trkpt");
         timeTag.push("time");
         trackPointTag.push("trkpt");
-        track = new Track();
+        track = new Track(new OptimumSectionDeductor());
     }
 
     @Override
