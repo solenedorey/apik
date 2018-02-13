@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public class OptimumSectionDeductor implements SectionDeductorStrategy {
 
+    private final static double METER_RANGE = 400.0;
+
     @Override
-    public ArrayList<TrackPoint> deduceSections(Track track) {
-        /*ArrayList<TrackSection> trackSections = new ArrayList<>();*/
-        ArrayList<TrackPoint> tempTrackSections = new ArrayList<>();
-        /*TrackPoint tempTrackPointMax;
-        TrackPoint tempTrackPointMin;*/
+    public ArrayList<TrackSection> deduceSections(Track track) {
+        ArrayList<TrackPoint> tempTrackPointSections = new ArrayList<>();
         ArrayList<TrackPoint> trackPoints = track.getTrackPoints();
+        /*tempTrackPointSections.add(trackPoints.get(0));*/
         for (int i = 0; i < trackPoints.size(); i++) {
             double currentElevation = trackPoints.get(i).getElevation();
             double distanceBefore = 0;
@@ -20,7 +20,7 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
             boolean isThereSomeoneHigherThanMeAfter = false;
             boolean isThereSomeoneLowerThanMeAfter = false;
             int j = i - 1;
-            while (distanceBefore <= 300.0) {
+            while (distanceBefore <= METER_RANGE) {
                 if (j < 0) {
                     break;
                 }
@@ -30,24 +30,11 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
                 if (!isThereSomeoneLowerThanMeBefore && trackPoints.get(j).getElevation() < currentElevation) {
                     isThereSomeoneLowerThanMeBefore = true;
                 }
-                /*if (isThereSomeoneLowerThanMe && !isThereSomeoneHigherThanMe) {
-                    *//*tempListMax.add(trackPoints.get(j));*//*
-                    tempTrackPointMax = trackPoints.get(i);
-                    break;
-                }*/
-                /*if (!isThereSomeoneLowerThanMe && isThereSomeoneHigherThanMe) {
-                    *//*tempListMin.add(trackPoints.get(j));*//*
-                    tempTrackPointMin = trackPoints.get(i);
-                    break;
-                }*/
                 distanceBefore += trackPoints.get(j).getDistanceToNextPoint();
                 j--;
             }
-            /*if (j > 0 && distanceBefore > 300.0) {
-                tempList.remove(tempList.get(tempList.size() - 1));
-            }*/
             int k = i + 1;
-            while (distanceAfter <= 300.0) {
+            while (distanceAfter <= METER_RANGE) {
                 if (k >= trackPoints.size()) {
                     break;
                 }
@@ -61,20 +48,23 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
                 k++;
             }
             if (!isThereSomeoneHigherThanMeBefore && !isThereSomeoneHigherThanMeAfter) {
-                tempTrackSections.add(trackPoints.get(i));
+                tempTrackPointSections.add(trackPoints.get(i));
             } else if (!isThereSomeoneLowerThanMeBefore && !isThereSomeoneLowerThanMeAfter) {
-                tempTrackSections.add(trackPoints.get(i));
+                tempTrackPointSections.add(trackPoints.get(i));
             }
-            /*if (distanceAfter > 50.0) {
-                tempList.remove(tempList.get(tempList.size() - 1));
-            }*/
-            System.out.println(distanceBefore);
+            /*System.out.println(distanceBefore);
             System.out.println(distanceAfter);
-            System.out.println("----");
+            System.out.println("----");*/
         }
-        System.out.println(tempTrackSections);
-        System.out.println(tempTrackSections.size());
+        /*tempTrackPointSections.add(trackPoints.get(trackPoints.size() - 1));*/
+        System.out.println(tempTrackPointSections);
+        System.out.println(tempTrackPointSections.size());
+        ArrayList<TrackSection> trackSections = new ArrayList<>();
         /*return trackSections;*/
-        return tempTrackSections;
+        for (int i = 0; i < tempTrackPointSections.size() - 1; i++) {
+            TrackSection trackSection = new TrackSection(track, tempTrackPointSections.get(i), tempTrackPointSections.get(i + 1));
+            trackSections.add(trackSection);
+        }
+        return trackSections;
     }
 }

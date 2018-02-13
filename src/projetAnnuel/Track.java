@@ -11,8 +11,7 @@ public class Track extends AbstractListenableModel {
     // Liste de TrackPoints
     private ArrayList<TrackPoint> trackPoints;
     // Liste des sections
-    /*private ArrayList<TrackSection> trackSections;*/
-    private ArrayList<TrackPoint> trackSections;
+    private ArrayList<TrackSection> trackSections;
     // L'altitude maximum
     private double maxElevation;
     // L'altitude minimum
@@ -51,10 +50,7 @@ public class Track extends AbstractListenableModel {
      *
      * @return une ArrayList : l'ensemble des TrackSections déduites
      */
-    /*public ArrayList<TrackSection> getTrackSections() {
-        return trackSections;
-    }*/
-    public ArrayList<TrackPoint> getTrackSections() {
+    public ArrayList<TrackSection> getTrackSections() {
         return trackSections;
     }
 
