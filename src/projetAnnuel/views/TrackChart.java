@@ -1,11 +1,18 @@
-package projetAnnuel;
+package projetAnnuel.views;
 
+import projetAnnuel.models.ChartPoint;
+import projetAnnuel.models.Track;
+import projetAnnuel.models.TrackPoint;
+import projetAnnuel.models.TrackSection;
 import projetAnnuel.events.ModelListener;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -14,12 +21,13 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
 
     private Track track;
 
-    JLabel noTrackLabel;
+    private JLabel noTrackLabel;
 
     private double metersToPixelsX;
     private double metersToPixelsY;
     public static int WIDTH = 800;
     public static int HEIGHT = 400;
+    public static int PADDING = 60;
 
     private ArrayList<ChartPoint> chartPoints;
 
@@ -38,15 +46,33 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics;
+        setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
+                "Visualisation du tracé GPS",
+                TitledBorder.CENTER,
+                TitledBorder.TOP));
 
         if (track != null) {
             this.remove(noTrackLabel);
             WIDTH = getWidth();
             HEIGHT = getHeight();
-            metersToPixelsX = WIDTH / track.getTotalDistance();
+            metersToPixelsX = (WIDTH - PADDING * 2) / track.getTotalDistance();
             /*metersToPixelsY = HEIGHT / track.getMaxElevation();*/
             double amplitude = track.getMaxElevation() - track.getMinElevation();
-            metersToPixelsY = HEIGHT / amplitude;
+            metersToPixelsY = (HEIGHT - PADDING * 2) / amplitude;
+
+            AffineTransform at = new AffineTransform();
+            at.setToRotation(Math.toRadians(-90), PADDING, PADDING);
+            graphics2D.setTransform(at);
+
+            graphics2D.drawString("Altitude en m", 0, PADDING /2);
+
+            at.setToRotation(Math.toRadians(0));
+            graphics2D.setTransform(at);
+
+            graphics2D.drawString("Distance en m", WIDTH - PADDING * 2, HEIGHT - PADDING / 2);
+
+            graphics2D.drawLine(PADDING, PADDING, PADDING, HEIGHT - PADDING);
+            graphics2D.drawLine(PADDING, HEIGHT - PADDING, WIDTH - PADDING, HEIGHT - PADDING);
 
             ArrayList<TrackPoint> trackPoints = track.getTrackPoints();
             ArrayList<TrackSection> trackSections = track.getTrackSections();
@@ -58,8 +84,8 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                 color = Color.red;
             }
 
-            double x1 = 0;
-            double y1 = 0;
+            double x1 = PADDING;
+            double y1;
             double x2 = 0;
             double y2 = 0;
 
@@ -72,10 +98,10 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                     x1 = x2;
                     y1 = y2;
                 } else {
-                    y1 = HEIGHT - (trackPoints.get(i).getElevation() - track.getMinElevation()) * metersToPixelsY;
+                    y1 = HEIGHT - PADDING - (trackPoints.get(i).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 }
                 x2 = x1 + trackPoints.get(i).getDistanceToNextPoint() * metersToPixelsX;
-                y2 = HEIGHT - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
+                y2 = HEIGHT - PADDING - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 graphics2D.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
                 if (i == 0) {
                     chartPoints.add(new ChartPoint((int) x1, (int) y1, String.valueOf(trackPoints.get(i).getElevation())));

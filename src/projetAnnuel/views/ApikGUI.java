@@ -1,15 +1,18 @@
-package projetAnnuel;
+package projetAnnuel.views;
 
+import projetAnnuel.models.Track;
+import projetAnnuel.models.TrackLoaderGPX;
 import projetAnnuel.events.MyWindowListener;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.net.URL;
 
 public class ApikGUI extends JFrame implements ActionListener {
 
@@ -22,8 +25,11 @@ public class ApikGUI extends JFrame implements ActionListener {
 
     private JRadioButtonMenuItem rbMenuItem;
     private Track track;
+
     private TrackChart trackChart;
-    private StatsView statsView;
+    private StatsView statsViewOnDescents;
+    private StatsView statsViewOnAscents;
+    private GlobalInfoView globalInfoView;
 
     private final JFileChooser fileChooser;
 
@@ -107,15 +113,49 @@ public class ApikGUI extends JFrame implements ActionListener {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
+        globalInfoView = new GlobalInfoView();
+        cp.add(globalInfoView, BorderLayout.NORTH);
+
         trackChart = new TrackChart();
         cp.add(trackChart, BorderLayout.CENTER);
 
-        statsView = new StatsView();
-        cp.add(statsView, BorderLayout.EAST);
+        JPanel statsPanel = new JPanel();
+        statsPanel.setLayout(new GridLayout(2,1));
+        statsPanel.setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
+                "Statistiques",
+                TitledBorder.CENTER,
+                TitledBorder.TOP));
+
+        JPanel descentsPanel = new JPanel();
+        descentsPanel.setLayout(new BorderLayout());
+        JLabel descentsLabel = new JLabel("Descentes");
+        descentsLabel.setForeground(Color.BLUE);
+        descentsPanel.add(descentsLabel, BorderLayout.NORTH);
+        statsViewOnDescents = new StatsView(true);
+        descentsPanel.add(statsViewOnDescents, BorderLayout.CENTER);
+
+        statsPanel.add(descentsPanel);
+
+        JPanel ascentsPanel = new JPanel();
+        ascentsPanel.setLayout(new BorderLayout());
+        JLabel ascentsLabel = new JLabel("Montées");
+        ascentsLabel.setForeground(Color.RED);
+        ascentsPanel.add(ascentsLabel, BorderLayout.NORTH);
+        statsViewOnAscents = new StatsView(false);
+        ascentsPanel.add(statsViewOnAscents, BorderLayout.CENTER);
+
+        statsPanel.add(ascentsPanel);
+
+        cp.add(statsPanel, BorderLayout.EAST);
 
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
+
+        URL url = ClassLoader.getSystemResource("projetAnnuel/views/logo.png");
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image image = toolkit.createImage(url);
+        setIconImage(image);
     }
 
     @Override
@@ -126,8 +166,10 @@ public class ApikGUI extends JFrame implements ActionListener {
                 File file = fileChooser.getSelectedFile();
                 TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
                 track = trackLoaderGPX.loadTrack();
+                globalInfoView.setTrack(track);
                 trackChart.setTrack(track);
-                statsView.setTrack(track);
+                statsViewOnDescents.setTrack(track);
+                statsViewOnAscents.setTrack(track);
             } else {
                 System.out.println("Open command cancelled by user");
             }

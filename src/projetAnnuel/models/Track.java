@@ -1,4 +1,4 @@
-package projetAnnuel;
+package projetAnnuel.models;
 
 import projetAnnuel.events.AbstractListenableModel;
 
@@ -12,12 +12,18 @@ public class Track extends AbstractListenableModel {
     private ArrayList<TrackPoint> trackPoints;
     // Liste des sections
     private ArrayList<TrackSection> trackSections;
+    // Liste des sections dont l'altitude est croissante
+    private ArrayList<TrackSection> trackRisingSections;
+    // Liste des sections dont l'altitude est décroissante
+    private ArrayList<TrackSection> trackDescendingSections;
     // L'altitude maximum
     private double maxElevation;
     // L'altitude minimum
     private double minElevation;
     // La distance totale parcourue
     private double totalDistance;
+    // La durée totale du track
+    private long totalDuration;
 
     /**
      * Constructor.
@@ -48,10 +54,28 @@ public class Track extends AbstractListenableModel {
     /**
      * Retourne la liste des TrackSections
      *
-     * @return une ArrayList : l'ensemble des TrackSections déduites
+     * @return une ArrayList
      */
     public ArrayList<TrackSection> getTrackSections() {
         return trackSections;
+    }
+
+    /**
+     * Retourne la liste des TrackSections dont l'altitude est croissante
+     *
+     * @return une ArrayList
+     */
+    public ArrayList<TrackSection> getTrackRisingSections() {
+        return trackRisingSections;
+    }
+
+    /**
+     * Retourne la liste des TrackSections dont l'altitude est décroissante
+     *
+     * @return une ArrayList
+     */
+    public ArrayList<TrackSection> getTrackDescendingSections() {
+        return trackDescendingSections;
     }
 
     /**
@@ -75,10 +99,19 @@ public class Track extends AbstractListenableModel {
     /**
      * Retourne la distance totale parcourue du Track
      *
-     * @return un entier
+     * @return un double
      */
     public double getTotalDistance() {
         return totalDistance;
+    }
+
+    /**
+     * Retourne la durée totale du Track
+     *
+     * @return un long
+     */
+    public long getTotalDuration() {
+        return totalDuration;
     }
 
     @Override
@@ -98,10 +131,23 @@ public class Track extends AbstractListenableModel {
         acquaintTrackPointsCategory();
         acquaintDistanceBetweenTrackpoints();
         computeTotalDistance();
+        computeTotalDuration();
         determineMaxAndMinElevation();
-
         trackSections = sectionDeductorStrategy.deduceSections(this);
+        determineRisingAndDescendingSections();
         fireChanges();
+    }
+
+    private void determineRisingAndDescendingSections() {
+        trackRisingSections = new ArrayList<>();
+        trackDescendingSections = new ArrayList<>();
+        for (TrackSection trackSection : getTrackSections()) {
+            if (trackSection.getStartIndex().getElevation() > trackSection.getEndIndex().getElevation()) {
+                trackDescendingSections.add(trackSection);
+            } else {
+                trackRisingSections.add(trackSection);
+            }
+        }
     }
 
     /**
@@ -113,6 +159,13 @@ public class Track extends AbstractListenableModel {
             distancesSum += trackPoints.get(i).getDistanceToNextPoint();
         }
         this.totalDistance = distancesSum;
+    }
+
+    /**
+     * Renseigne la durée totale du track
+     */
+    private void computeTotalDuration() {
+        totalDuration = trackPoints.get(trackPoints.size() - 1).getTime().getTime() - trackPoints.get(0).getTime().getTime();
     }
 
     public void determineMaxAndMinElevation() {

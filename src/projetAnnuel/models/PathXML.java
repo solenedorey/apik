@@ -1,4 +1,4 @@
-package projetAnnuel;
+package projetAnnuel.models;
 
 import java.util.Stack;
 

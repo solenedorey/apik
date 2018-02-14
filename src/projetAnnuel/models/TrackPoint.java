@@ -1,4 +1,4 @@
-package projetAnnuel;
+package projetAnnuel.models;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ public class TrackPoint {
     // Type de points
     private TrackPointCategory trackPointCategory;
 
-    enum TrackPointCategory {
+    public enum TrackPointCategory {
         LocalMinimum,
         LocalMaximum,
         Uphill,

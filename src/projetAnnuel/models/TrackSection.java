@@ -1,4 +1,7 @@
-package projetAnnuel;
+package projetAnnuel.models;
+
+import projetAnnuel.models.Track;
+import projetAnnuel.models.TrackPoint;
 
 import java.util.ArrayList;
 
