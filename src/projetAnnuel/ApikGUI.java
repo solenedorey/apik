@@ -3,7 +3,8 @@ package projetAnnuel;
 import projetAnnuel.events.MyWindowListener;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,14 +23,19 @@ public class ApikGUI extends JFrame implements ActionListener {
     private JRadioButtonMenuItem rbMenuItem;
     private Track track;
     private TrackChart trackChart;
+    private StatsView statsView;
+
     private final JFileChooser fileChooser;
 
-    public ApikGUI(Track track, String title) {
+    public ApikGUI(String title) {
         super(title);
-        fileChooser = new JFileChooser();
 
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         this.addWindowListener(new MyWindowListener(this));
+
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("GPX files", "gpx");
+        fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(filter);
 
         Container cp = this.getContentPane();
         cp.setLayout(new BorderLayout());
@@ -62,7 +68,7 @@ public class ApikGUI extends JFrame implements ActionListener {
 
         //Build second menu in the menu bar.
         menu = new JMenu("Configurations");
-        menu.setMnemonic(KeyEvent.VK_S);
+        menu.setMnemonic(KeyEvent.VK_C);
         menu.getAccessibleContext().setAccessibleDescription(
                 "Configurations du graphique");
 
@@ -102,7 +108,10 @@ public class ApikGUI extends JFrame implements ActionListener {
         setJMenuBar(menuBar);
 
         trackChart = new TrackChart();
-        cp.add(trackChart);
+        cp.add(trackChart, BorderLayout.CENTER);
+
+        statsView = new StatsView();
+        cp.add(statsView, BorderLayout.EAST);
 
         pack();
         setLocationRelativeTo(null);
@@ -115,10 +124,10 @@ public class ApikGUI extends JFrame implements ActionListener {
             int returnVal = fileChooser.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File file = fileChooser.getSelectedFile();
-                System.out.println("Opening: " + file.getAbsolutePath());
                 TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
                 track = trackLoaderGPX.loadTrack();
                 trackChart.setTrack(track);
+                statsView.setTrack(track);
             } else {
                 System.out.println("Open command cancelled by user");
             }

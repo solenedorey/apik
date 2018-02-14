@@ -8,8 +8,6 @@ public class Main {
 
         /*System.out.println(track);*/
 
-        ApikGUI apikGUI = new ApikGUI(track, "APIK");
-
-        /*ApikGUI apikGUI = new ApikGUI();*/
+        ApikGUI apikGUI = new ApikGUI("APIK");
     }
 }

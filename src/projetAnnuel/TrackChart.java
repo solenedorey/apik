@@ -4,18 +4,33 @@ import projetAnnuel.events.ModelListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
-public class TrackChart extends JPanel implements ModelListener {
+public class TrackChart extends JPanel implements ModelListener, MouseMotionListener {
 
     private Track track;
+
+    JLabel noTrackLabel;
+
     private double metersToPixelsX;
     private double metersToPixelsY;
     public static int WIDTH = 800;
     public static int HEIGHT = 400;
 
+    private ArrayList<ChartPoint> chartPoints;
+
+    private Ellipse2D ellipse2D;
+    private String elevationLabel;
+
     public TrackChart() {
-        this.track = null;
+        track = null;
+        chartPoints = new ArrayList<>();
+        noTrackLabel = null;
+        setLayout(new BorderLayout());
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
     }
 
@@ -25,12 +40,13 @@ public class TrackChart extends JPanel implements ModelListener {
         Graphics2D graphics2D = (Graphics2D) graphics;
 
         if (track != null) {
+            this.remove(noTrackLabel);
             WIDTH = getWidth();
             HEIGHT = getHeight();
             metersToPixelsX = WIDTH / track.getTotalDistance();
-            metersToPixelsY = HEIGHT / track.getMaxElevation();
-            /*double amplitude = track.getMaxElevation() - track.getMinElevation();
-            metersToPixelsY = HEIGHT / amplitude;*/
+            /*metersToPixelsY = HEIGHT / track.getMaxElevation();*/
+            double amplitude = track.getMaxElevation() - track.getMinElevation();
+            metersToPixelsY = HEIGHT / amplitude;
 
             ArrayList<TrackPoint> trackPoints = track.getTrackPoints();
             ArrayList<TrackSection> trackSections = track.getTrackSections();
@@ -42,18 +58,13 @@ public class TrackChart extends JPanel implements ModelListener {
                 color = Color.red;
             }
 
-            /*Color color;
-            ArrayList<TrackSection> trackSections = track.getTrackSections();
-            if (trackSections.get(0).getTrackPointCategory() == TrackPoint.TrackPointCategory.LocalMaximum) {
-                color = Color.blue;
-            } else {
-                color = Color.red;
-            }*/
-
             double x1 = 0;
             double y1 = 0;
             double x2 = 0;
             double y2 = 0;
+
+
+            chartPoints = new ArrayList<>();
 
             for (int i = 0; i < trackPoints.size() - 1; i++) {
                 graphics2D.setColor(color);
@@ -61,32 +72,59 @@ public class TrackChart extends JPanel implements ModelListener {
                     x1 = x2;
                     y1 = y2;
                 } else {
-                    y1 = HEIGHT - (trackPoints.get(i).getElevation() * metersToPixelsY);
+                    y1 = HEIGHT - (trackPoints.get(i).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 }
                 x2 = x1 + trackPoints.get(i).getDistanceToNextPoint() * metersToPixelsX;
-                y2 = HEIGHT - (trackPoints.get(i + 1).getElevation() * metersToPixelsY);
+                y2 = HEIGHT - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 graphics2D.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
-                /*if (trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.LocalMaximum || trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.Downhill) {
-                    color = Color.blue;
-                } else if (trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.LocalMinimum || trackPoints.get(i).getTrackPointCategory() == TrackPoint.TrackPointCategory.Uphill) {
-                    color = Color.red;
-                }*/
-                /*if (trackSections.indexOf(trackPoints.get(i)) != -1) {
-                    color = (color == Color.blue ? Color.red : Color.blue);
-                }*/
+                if (i == 0) {
+                    chartPoints.add(new ChartPoint((int) x1, (int) y1, String.valueOf(trackPoints.get(i).getElevation())));
+                }
+                chartPoints.add(new ChartPoint((int) x2, (int) y2, String.valueOf(trackPoints.get(i + 1).getElevation())));
+
                 for (TrackSection trackSection : trackSections) {
                     if (trackSection.getStartIndex() == trackPoints.get(i)) {
                         color = (color == Color.blue ? Color.red : Color.blue);
                     }
                 }
             }
-            for (TrackSection trackSection : trackSections) {
-                System.out.println("km/h : " + trackSection.getAverageSpeedInKmPerHour());
-                System.out.println("m/s : " + trackSection.getAverageSpeedInMetersPerSecond());
-                System.out.println("----");
+            if (ellipse2D != null && elevationLabel != null) {
+                Boolean isInRightSide = false;
+                if (ellipse2D.getX() > getWidth() / 2) {
+                    isInRightSide = true;
+                }
+                graphics2D.setColor(Color.DARK_GRAY);
+                graphics2D.fill(ellipse2D);
+
+                FontMetrics fm = graphics2D.getFontMetrics();
+                Rectangle2D rect = fm.getStringBounds(elevationLabel, graphics2D);
+
+
+                graphics2D.setColor(Color.WHITE);
+                int rectX;
+                int labelX;
+                if (isInRightSide) {
+                    rectX = (int) ellipse2D.getX() - 7 - fm.stringWidth(elevationLabel);
+                    labelX = (int) ellipse2D.getX() - 5 - fm.stringWidth(elevationLabel);
+                } else {
+                    rectX = (int) ellipse2D.getX() + 13;
+                    labelX = (int) ellipse2D.getX() + 15;
+                }
+                graphics2D.fillRect(
+                        rectX,
+                        (int) ellipse2D.getY() + 14 - fm.getAscent(),
+                        (int) rect.getWidth() + 4,
+                        (int) rect.getHeight() + 4);
+
+                graphics2D.setColor(Color.DARK_GRAY);
+                graphics2D.drawString(elevationLabel, labelX, (int) ellipse2D.getY() + 15);
             }
         } else {
-            this.add(new JLabel("Aucun track n'a été chargé."));
+            if (noTrackLabel == null) {
+                noTrackLabel = new JLabel("Aucun track n'a été chargé.");
+                noTrackLabel.setHorizontalAlignment(JLabel.CENTER);
+                this.add(noTrackLabel, BorderLayout.CENTER);
+            }
         }
     }
 
@@ -101,6 +139,24 @@ public class TrackChart extends JPanel implements ModelListener {
         }
         this.track = track;
         track.addListener(this);
+        addMouseMotionListener(this);
         repaint();
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        int mouseX = e.getX();
+        for (ChartPoint chartPoint : chartPoints) {
+            if (chartPoint.getX() == mouseX) {
+                ellipse2D = new Ellipse2D.Double(chartPoint.getX() - 5,chartPoint.getY() - 5,10,10);
+                elevationLabel = chartPoint.getLabel();
+                repaint();
+            }
+        }
     }
 }

@@ -57,8 +57,8 @@ public class OptimumSectionDeductor implements SectionDeductorStrategy {
             System.out.println("----");*/
         }
         /*tempTrackPointSections.add(trackPoints.get(trackPoints.size() - 1));*/
-        System.out.println(tempTrackPointSections);
-        System.out.println(tempTrackPointSections.size());
+        /*System.out.println(tempTrackPointSections);
+        System.out.println(tempTrackPointSections.size());*/
         ArrayList<TrackSection> trackSections = new ArrayList<>();
         /*return trackSections;*/
         for (int i = 0; i < tempTrackPointSections.size() - 1; i++) {
