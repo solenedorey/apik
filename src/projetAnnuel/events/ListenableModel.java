@@ -1,8 +1,19 @@
 package projetAnnuel.events;
 
+/**
+ * Interface permettant à un modèle d'être écouté
+ */
 public interface ListenableModel {
 
-    void addListener(ModelListener l);
+    /**
+     * Permet l'abonnement d'un écouteur au modèle écoutable
+     *
+     * @param modelListener : une instance de ModelListener
+     */
+    void addListener(ModelListener modelListener);
 
-    void removeListener(ModelListener l);
+    /**
+     * Permet le désabonnement d'un écouteur
+     */
+    void removeListener(ModelListener modelListener);
 }

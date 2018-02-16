@@ -104,9 +104,9 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                 y2 = HEIGHT - PADDING - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 graphics2D.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
                 if (i == 0) {
-                    chartPoints.add(new ChartPoint((int) x1, (int) y1, String.valueOf(trackPoints.get(i).getElevation())));
+                    chartPoints.add(new ChartPoint((int) x1, (int) y1, String.valueOf((int) trackPoints.get(i).getElevation())));
                 }
-                chartPoints.add(new ChartPoint((int) x2, (int) y2, String.valueOf(trackPoints.get(i + 1).getElevation())));
+                chartPoints.add(new ChartPoint((int) x2, (int) y2, String.valueOf((int) trackPoints.get(i + 1).getElevation())));
 
                 for (TrackSection trackSection : trackSections) {
                     if (trackSection.getStartIndex() == trackPoints.get(i)) {

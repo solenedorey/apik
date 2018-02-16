@@ -2,5 +2,10 @@ package projetAnnuel.events;
 
 public interface ModelListener {
 
-    void updateModel(Object o);
+    /**
+     * Permet de mettre à jour le modèle
+     *
+     * @param object
+     */
+    void updateModel(Object object);
 }

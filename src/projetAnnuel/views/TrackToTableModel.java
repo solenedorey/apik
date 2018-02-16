@@ -5,7 +5,10 @@ import projetAnnuel.models.Track;
 import projetAnnuel.models.TrackSection;
 
 import javax.swing.table.AbstractTableModel;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class TrackToTableModel extends AbstractTableModel implements ModelListener {
 
@@ -17,21 +20,23 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
     private final static int SPEED_KM_H = 3;
     private Boolean areAboutSkiDescents;
 
-    private String[] columnName = {"Distance parcourue (m)", "Temps écoulé (min)", "Vitesse moyenne (m/s)", "Vitesse moyenne (km/h)"};
+    private String[] columnName = {"Distance parcourue (m)", "Temps écoulé (min:sec)", "Vitesse moyenne (m/s)", "Vitesse moyenne (km/h)"};
 
     public TrackToTableModel(Track track, Boolean areAboutSkiDescents) {
         this.track = track;
-        this.track.addListener(this);
         this.areAboutSkiDescents = areAboutSkiDescents;
     }
 
     @Override
     public int getRowCount() {
-        if (areAboutSkiDescents) {
-            return track.getTrackDescendingSections().size();
-        } else {
-            return track.getTrackRisingSections().size();
+        if (track !=  null) {
+            if (areAboutSkiDescents) {
+                return track.getTrackDescendingSections().size();
+            } else {
+                return track.getTrackRisingSections().size();
+            }
         }
+        return 0;
     }
 
     @Override
@@ -41,24 +46,29 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        TrackSection trackSection;
-        if (areAboutSkiDescents) {
-            trackSection = track.getTrackDescendingSections().get(rowIndex);
-        } else {
-            trackSection  = track.getTrackRisingSections().get(rowIndex);
+        if (track != null) {
+            TrackSection trackSection;
+            if (areAboutSkiDescents) {
+                trackSection = track.getTrackDescendingSections().get(rowIndex);
+            } else {
+                trackSection  = track.getTrackRisingSections().get(rowIndex);
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("0.##");
+            switch (columnIndex) {
+                case DISTANCE:
+                    return decimalFormat.format(trackSection.getDistanceTravelled());
+                case TIME:
+                    DateFormat dateFormat = new SimpleDateFormat("mm:ss");
+                    Date duration = new Date(trackSection.getSpentTime());
+                    return dateFormat.format(duration);
+                case SPEED_M_S:
+                    return decimalFormat.format(trackSection.getAverageSpeedInMetersPerSecond());
+                case SPEED_KM_H:
+                    return decimalFormat.format(trackSection.getAverageSpeedInKmPerHour());
+            }
+            return null;
         }
-        DecimalFormat decimalFormat = new DecimalFormat("0.##");
-        switch (columnIndex) {
-            case DISTANCE:
-                return decimalFormat.format(trackSection.getDistanceTravelled());
-            case TIME:
-                return decimalFormat.format(trackSection.getSpentTime() / 1000d / 60d);
-            case SPEED_M_S:
-                return decimalFormat.format(trackSection.getAverageSpeedInMetersPerSecond());
-            case SPEED_KM_H:
-                return decimalFormat.format(trackSection.getAverageSpeedInKmPerHour());
-        }
-        return null;
+        return "";
     }
 
     @Override
@@ -69,5 +79,13 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
     @Override
     public void updateModel(Object o) {
         fireTableDataChanged();
+    }
+
+    public void setTrack(Track track) {
+        if (this.track != null) {
+            track.removeListener(this);
+        }
+        this.track = track;
+        track.addListener(this);
     }
 }

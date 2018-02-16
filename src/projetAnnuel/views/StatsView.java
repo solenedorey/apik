@@ -1,55 +1,87 @@
 package projetAnnuel.views;
 
+import projetAnnuel.events.ModelListener;
 import projetAnnuel.models.Track;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
 
-public class StatsView extends JPanel {
+public class StatsView extends JPanel implements ModelListener {
 
     private Track track;
-    private JScrollPane jScrollPane;
-    private Boolean areAboutSkiDescents;
-    private JLabel noTrackLabel;
+
+    private TrackToTableModel trackToDescentsTableModel;
+    private TrackToTableModel trackToAscentsTableModel;
 
     public static int WIDTH = 400;
 
-    public StatsView(Boolean areAboutSkiDescents) {
-        this.areAboutSkiDescents = areAboutSkiDescents;
+    public StatsView() {
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
+                "Statistiques",
+                TitledBorder.CENTER,
+                TitledBorder.TOP));
+        setLayout(new GridLayout(2, 1));
+
         track = null;
-        noTrackLabel = null;
-        setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(WIDTH, TrackChart.HEIGHT / 2));
+
+        JPanel descentsPanel = new JPanel();
+        descentsPanel.setLayout(new BorderLayout());
+        descentsPanel.setPreferredSize(new Dimension(WIDTH, TrackChart.HEIGHT / 2));
+
+        JLabel descentsLabel = new JLabel("Descentes");
+        descentsLabel.setForeground(Color.BLUE);
+        descentsLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        descentsPanel.add(descentsLabel, BorderLayout.NORTH);
+
+        trackToDescentsTableModel = new TrackToTableModel(track, true);
+        JScrollPane descentsTable = buildTable(trackToDescentsTableModel);
+        descentsTable.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.BLUE, Color.BLUE));
+        descentsPanel.add(descentsTable, BorderLayout.CENTER);
+
+        JPanel ascentsPanel = new JPanel();
+        ascentsPanel.setLayout(new BorderLayout());
+        ascentsPanel.setPreferredSize(new Dimension(WIDTH, TrackChart.HEIGHT / 2));
+
+        JLabel ascentsLabel = new JLabel("Montées");
+        ascentsLabel.setForeground(Color.RED);
+        ascentsLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        ascentsPanel.add(ascentsLabel, BorderLayout.NORTH);
+
+        trackToAscentsTableModel = new TrackToTableModel(track, false);
+        JScrollPane ascentsTable = buildTable(trackToAscentsTableModel);
+        ascentsTable.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.RED, Color.RED));
+        ascentsPanel.add(ascentsTable, BorderLayout.CENTER);
+
+        add(descentsPanel);
+        add(ascentsPanel);
     }
 
-    @Override
-    public void paintComponent(Graphics graphics) {
-        if (track != null) {
-            this.remove(noTrackLabel);
-            JTable jTable = new JTable(new TrackToTableModel(track, areAboutSkiDescents));
-            MultiLineTableHeaderRenderer multiLineTableHeaderRenderer = new MultiLineTableHeaderRenderer();
-            jTable.getTableHeader().setDefaultRenderer(multiLineTableHeaderRenderer);
-            DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-            centerRenderer.setHorizontalAlignment( JLabel.CENTER );
-            jTable.setDefaultRenderer(Object.class, centerRenderer);
-            jScrollPane = new JScrollPane(jTable);
-            this.add(jScrollPane, BorderLayout.CENTER);
-        } else {
-            if (noTrackLabel == null) {
-                noTrackLabel = new JLabel("Aucun track n'a été chargé.");
-                noTrackLabel.setHorizontalAlignment(JLabel.CENTER);
-                this.add(noTrackLabel, BorderLayout.CENTER);
-            }
-        }
+    public JScrollPane buildTable(TrackToTableModel trackToTableModel) {
+        JTable jTable = new JTable(trackToTableModel);
+        MultiLineTableHeaderRenderer multiLineTableHeaderRenderer = new MultiLineTableHeaderRenderer();
+        jTable.getTableHeader().setDefaultRenderer(multiLineTableHeaderRenderer);
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        jTable.setDefaultRenderer(Object.class, centerRenderer);
+        return new JScrollPane(jTable);
     }
 
     public void setTrack(Track track) {
+        if (this.track != null) {
+            track.removeListener(this);
+        }
         this.track = track;
+        track.addListener(this);
+        trackToAscentsTableModel.setTrack(track);
+        trackToDescentsTableModel.setTrack(track);
+        repaint();
+    }
+
+    @Override
+    public void updateModel(Object object) {
         repaint();
     }
 }

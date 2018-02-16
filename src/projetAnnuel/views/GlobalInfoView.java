@@ -1,5 +1,6 @@
 package projetAnnuel.views;
 
+import projetAnnuel.events.ModelListener;
 import projetAnnuel.models.Track;
 
 import javax.swing.*;
@@ -10,41 +11,57 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class GlobalInfoView extends JPanel {
+public class GlobalInfoView extends JPanel implements ModelListener {
 
     private Track track;
-    private JLabel noTrackLabel;
+    private JLabel totalDistance;
+    private JLabel totalTime;
+    private JLabel descentsNumber;
+    private JLabel ascentsNumber;
+    private JLabel maxElevation;
+    private JLabel minElevation;
 
-    public GlobalInfoView() {
-        setBorder (BorderFactory.createTitledBorder (BorderFactory.createEtchedBorder (),
+    public GlobalInfoView(Track track) {
+        setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
                 "Informations globales",
                 TitledBorder.CENTER,
                 TitledBorder.TOP));
         this.track = track;
-        setLayout(new BorderLayout());
-        noTrackLabel = new JLabel("Aucun track n'a été chargé.");
-        noTrackLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(noTrackLabel, BorderLayout.CENTER);
-    }
-
-    public void setTrack(Track track) {
-        remove(noTrackLabel);
         setLayout(new GridLayout(2,3));
-        this.track = track;
-        DecimalFormat decimalFormat = new DecimalFormat("0.##");
-        JLabel totalDistance = new JLabel("Distance totale en km : " + String.valueOf(decimalFormat.format(track.getTotalDistance() / 1000)));
-        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-        Date duration = new Date(track.getTotalDuration());
-        JLabel totalTime = new JLabel("Durée totale : " + dateFormat.format(duration));
-        JLabel descentsNumber = new JLabel("Nombre de descentes : " + String.valueOf(track.getTrackDescendingSections().size()));
-        JLabel ascentsNumber = new JLabel("Nombre de montées : " + String.valueOf(track.getTrackRisingSections().size()));
-        JLabel maxElevation = new JLabel("Altitude maximale : " + String.valueOf(track.getMaxElevation()));
-        JLabel minElevation = new JLabel("Altitude minimale : " + String.valueOf(track.getMinElevation()));
+        totalDistance = new JLabel("Distance totale en km : -");
+        totalTime = new JLabel("Durée totale : -");
+        descentsNumber = new JLabel("Nombre de descentes : -");
+        ascentsNumber = new JLabel("Nombre de montées : -");
+        maxElevation = new JLabel("Altitude maximale en m : -");
+        minElevation = new JLabel("Altitude minimale en m : -");
         add(totalDistance);
         add(descentsNumber);
         add(maxElevation);
         add(totalTime);
         add(ascentsNumber);
         add(minElevation);
+    }
+
+    public void setTrack(Track track) {
+        if (this.track != null) {
+            track.removeListener(this);
+        }
+        this.track = track;
+        track.addListener(this);
+        DecimalFormat decimalFormat = new DecimalFormat("0.##");
+        DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+        Date duration = new Date(track.getTotalDuration());
+        totalDistance.setText("Distance totale en km : " + String.valueOf(decimalFormat.format(track.getTotalDistance() / 1000)));
+        totalTime.setText("Durée totale : " + dateFormat.format(duration));
+        descentsNumber.setText("Nombre de descentes : " + String.valueOf(track.getTrackDescendingSections().size()));
+        ascentsNumber.setText("Nombre de montées : " + String.valueOf(track.getTrackRisingSections().size()));
+        maxElevation.setText("Altitude maximale en m : " + String.valueOf((int) track.getMaxElevation()));
+        minElevation.setText("Altitude minimale en m: " + String.valueOf((int) track.getMinElevation()));
+        repaint();
+    }
+
+    @Override
+    public void updateModel(Object object) {
+        repaint();
     }
 }

@@ -3,6 +3,9 @@ package projetAnnuel.models;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+/**
+ * Classe permettant le parsing d'un fichier GPX
+ */
 public class GPXHandler extends DefaultHandler {
 
     private PathXML tagsStack = new PathXML();
@@ -13,6 +16,9 @@ public class GPXHandler extends DefaultHandler {
     private TrackPoint trackPoint;
     private Track track;
 
+    /**
+     * Constructeur
+     */
     public GPXHandler() {
         elevationTag.push("ele");
         timeTag.push("trkpt");
