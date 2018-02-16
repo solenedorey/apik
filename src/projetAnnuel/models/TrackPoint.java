@@ -8,9 +8,6 @@ public class TrackPoint {
      * Attributs
      */
 
-    public static int COUNT = 0;
-    // Identifiant du trackPoint
-    private int id;
     // Latitude degrés décimaux, WGS84
     private double latitude;
     // Longitude degrés décimaux, WGS84
@@ -19,8 +16,6 @@ public class TrackPoint {
     private double elevation;
     // Horodatage
     private Date time;
-    // Identifiant du prochain trackPoint
-    private int nextTrackPointId;
     // Distance avec le prochain point
     private double distanceToNextPoint;
     // Type de points
@@ -38,11 +33,9 @@ public class TrackPoint {
      * Constructeur
      */
     public TrackPoint() {
-        this.id = COUNT++;
         this.latitude = 0D;
         this.longitude = 0D;
         this.elevation = 0D;
-        this.nextTrackPointId = COUNT;
         this.time = new Date();
     }
 
@@ -119,11 +112,7 @@ public class TrackPoint {
     @Override
     public String toString() {
         return "TrackPoint :" +
-                "\n\tId : " +
-                id +
-                /*"\n\tNextTrackPointId : " +
-                nextTrackPointId +
-                "\n\tDistanceToNextTrackPoint : " +
+                /*"\n\tDistanceToNextTrackPoint : " +
                 distanceToNextPoint +
                 "\n\tLatitude : " +
                 latitude +

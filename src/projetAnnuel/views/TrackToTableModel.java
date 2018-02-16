@@ -10,6 +10,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Adapteur Track vers Tableau
+ */
 public class TrackToTableModel extends AbstractTableModel implements ModelListener {
 
     private Track track;
@@ -31,9 +34,9 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
     public int getRowCount() {
         if (track !=  null) {
             if (areAboutSkiDescents) {
-                return track.getTrackDescendingSections().size();
+                return track.getDownhillSections().size();
             } else {
-                return track.getTrackRisingSections().size();
+                return track.getUphillSections().size();
             }
         }
         return 0;
@@ -49,9 +52,9 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
         if (track != null) {
             TrackSection trackSection;
             if (areAboutSkiDescents) {
-                trackSection = track.getTrackDescendingSections().get(rowIndex);
+                trackSection = track.getDownhillSections().get(rowIndex);
             } else {
-                trackSection  = track.getTrackRisingSections().get(rowIndex);
+                trackSection  = track.getUphillSections().get(rowIndex);
             }
             DecimalFormat decimalFormat = new DecimalFormat("0.##");
             switch (columnIndex) {

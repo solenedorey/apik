@@ -2,9 +2,6 @@ package projetAnnuel.models;
 
 import org.xml.sax.SAXException;
 import projetAnnuel.Main;
-import projetAnnuel.models.GPXHandler;
-import projetAnnuel.models.Track;
-import projetAnnuel.models.TrackLoader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -13,6 +10,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Classe permettant de charger un track d'après un fichier GPX
+ */
 public class TrackLoaderGPX extends TrackLoader {
 
     private GPXHandler handler;

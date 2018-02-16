@@ -24,9 +24,17 @@ public class GPXHandler extends DefaultHandler {
         timeTag.push("trkpt");
         timeTag.push("time");
         trackPointTag.push("trkpt");
-        track = new Track(new OptimumSectionDeductor());
+        track = new Track(new GlobalUphillAndDownhillSectionDeductor());
     }
 
+    /**
+     * Permet de créer un nouveau TrackPoint si l'élément courant en est un et de renseigner sa latitude et longitude
+     *
+     * @param namespaceURI String
+     * @param localName String
+     * @param qName String
+     * @param atts Attributes
+     */
     @Override
     public void startElement(String namespaceURI, String localName, String qName, Attributes atts) {
         tagsStack.push(qName);
@@ -43,6 +51,13 @@ public class GPXHandler extends DefaultHandler {
         }
     }
 
+    /**
+     * Permet de renseigner l'altitude et l'horodatage du TrackPoint et d'ajouter ce dernier au Track
+     *
+     * @param namespaceURI String
+     * @param localName String
+     * @param qName String
+     */
     @Override
     public void endElement(String namespaceURI, String localName, String qName) {
         if (tagsStack.endsWith(elevationTag)) {
@@ -62,11 +77,23 @@ public class GPXHandler extends DefaultHandler {
         tagsStack.pop();
     }
 
+    /**
+     * Permet de récupérer le contenu texte d'une balise
+     *
+     * @param ch char[]
+     * @param start int
+     * @param length int
+     */
     @Override
     public void characters(char[] ch, int start, int length) {
         TagContent += new String(ch, start, length).trim();
     }
 
+    /**
+     * Permet de retourner le track
+     *
+     * @return Track
+     */
     public Track getTrack() {
         return track;
     }

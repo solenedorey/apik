@@ -11,6 +11,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Vue sur les informations générales du track
+ */
 public class GlobalInfoView extends JPanel implements ModelListener {
 
     private Track track;
@@ -53,8 +56,8 @@ public class GlobalInfoView extends JPanel implements ModelListener {
         Date duration = new Date(track.getTotalDuration());
         totalDistance.setText("Distance totale en km : " + String.valueOf(decimalFormat.format(track.getTotalDistance() / 1000)));
         totalTime.setText("Durée totale : " + dateFormat.format(duration));
-        descentsNumber.setText("Nombre de descentes : " + String.valueOf(track.getTrackDescendingSections().size()));
-        ascentsNumber.setText("Nombre de montées : " + String.valueOf(track.getTrackRisingSections().size()));
+        descentsNumber.setText("Nombre de descentes : " + String.valueOf(track.getDownhillSections().size()));
+        ascentsNumber.setText("Nombre de montées : " + String.valueOf(track.getUphillSections().size()));
         maxElevation.setText("Altitude maximale en m : " + String.valueOf((int) track.getMaxElevation()));
         minElevation.setText("Altitude minimale en m: " + String.valueOf((int) track.getMinElevation()));
         repaint();

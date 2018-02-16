@@ -4,6 +4,9 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * Classe permettant le rendu sur plusieurs lignes des headers d'un tableau
+ */
 public class MultiLineTableHeaderRenderer extends JTextArea implements TableCellRenderer
 {
     public MultiLineTableHeaderRenderer() {

@@ -1,22 +1,18 @@
 package projetAnnuel.views;
 
-import projetAnnuel.models.ChartPoint;
-import projetAnnuel.models.Track;
-import projetAnnuel.models.TrackPoint;
-import projetAnnuel.models.TrackSection;
+import projetAnnuel.models.*;
 import projetAnnuel.events.ModelListener;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.event.*;
+import java.awt.geom.*;
 import java.util.ArrayList;
 
+/**
+ * Vue sur le track permettant de le visualiser en 2D
+ */
 public class TrackChart extends JPanel implements ModelListener, MouseMotionListener {
 
     private Track track;

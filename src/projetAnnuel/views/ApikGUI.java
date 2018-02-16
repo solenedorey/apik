@@ -7,9 +7,7 @@ import projetAnnuel.events.MyWindowListener;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.prefs.Preferences;
@@ -45,6 +43,8 @@ public class ApikGUI extends JFrame implements ActionListener {
         mainPanel.setLayout(new BorderLayout(10,10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // Instanciation des différents vues
+
         globalInfoView = new GlobalInfoView(track);
         mainPanel.add(globalInfoView, BorderLayout.NORTH);
 
@@ -56,14 +56,15 @@ public class ApikGUI extends JFrame implements ActionListener {
 
         contentPane.add(mainPanel, BorderLayout.CENTER);
 
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        // Changement de l'icône
         URL url = ClassLoader.getSystemResource("projetAnnuel/views/logo.png");
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image image = toolkit.createImage(url);
         setIconImage(image);
+
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(true);
     }
 
     @Override
@@ -76,6 +77,7 @@ public class ApikGUI extends JFrame implements ActionListener {
                 File file = fileChooser.getSelectedFile();
                 TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
                 track = trackLoaderGPX.loadTrack();
+                // Chargement du track dans les différentes vues
                 globalInfoView.setTrack(track);
                 trackChart.setTrack(track);
                 statsView.setTrack(track);
@@ -93,6 +95,9 @@ public class ApikGUI extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Construction du menu
+     */
     public void buildMenu() {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("GPX files", "gpx");
         fileChooser = new JFileChooser();

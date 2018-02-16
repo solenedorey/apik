@@ -9,6 +9,9 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 
+/**
+ * Vue sur les statistiques des montées et des descentes d'un track
+ */
 public class StatsView extends JPanel implements ModelListener {
 
     private Track track;

@@ -2,7 +2,7 @@ package projetAnnuel.models;
 
 import java.util.Stack;
 
-public class PathXML  extends Stack<String> {
+public class PathXML extends Stack<String> {
 
     public boolean startsWith(PathXML path){
         int offset = this.size() - path.size();

@@ -4,6 +4,9 @@ import projetAnnuel.events.AbstractListenableModel;
 
 import java.util.ArrayList;
 
+/**
+ * Classe représentant un track
+ */
 public class Track extends AbstractListenableModel {
 
     private SectionDeductorStrategy sectionDeductorStrategy;
@@ -13,9 +16,9 @@ public class Track extends AbstractListenableModel {
     // Liste des sections
     private ArrayList<TrackSection> trackSections;
     // Liste des sections dont l'altitude est croissante
-    private ArrayList<TrackSection> trackRisingSections;
+    private ArrayList<TrackSection> uphillSections;
     // Liste des sections dont l'altitude est décroissante
-    private ArrayList<TrackSection> trackDescendingSections;
+    private ArrayList<TrackSection> downhillSections;
     // L'altitude maximum
     private double maxElevation;
     // L'altitude minimum
@@ -26,7 +29,7 @@ public class Track extends AbstractListenableModel {
     private long totalDuration;
 
     /**
-     * Constructor.
+     * Constructeur
      */
     public Track(SectionDeductorStrategy sectionDeductorStrategy) {
         this.trackPoints = new ArrayList<>();
@@ -65,8 +68,8 @@ public class Track extends AbstractListenableModel {
      *
      * @return une ArrayList
      */
-    public ArrayList<TrackSection> getTrackRisingSections() {
-        return trackRisingSections;
+    public ArrayList<TrackSection> getUphillSections() {
+        return uphillSections;
     }
 
     /**
@@ -74,8 +77,8 @@ public class Track extends AbstractListenableModel {
      *
      * @return une ArrayList
      */
-    public ArrayList<TrackSection> getTrackDescendingSections() {
-        return trackDescendingSections;
+    public ArrayList<TrackSection> getDownhillSections() {
+        return downhillSections;
     }
 
     /**
@@ -125,7 +128,7 @@ public class Track extends AbstractListenableModel {
 
 
     /**
-     * Complète les informations de chaque point du Track
+     * Complète les informations de chaque point du Track ainsi que les infos du track lui même
      */
     public void prepare() {
         acquaintTrackPointsCategory();
@@ -134,18 +137,21 @@ public class Track extends AbstractListenableModel {
         computeTotalDuration();
         determineMaxAndMinElevation();
         trackSections = sectionDeductorStrategy.deduceSections(this);
-        determineRisingAndDescendingSections();
+        determineUphillAndDownhillSections();
         fireChanges();
     }
 
-    private void determineRisingAndDescendingSections() {
-        trackRisingSections = new ArrayList<>();
-        trackDescendingSections = new ArrayList<>();
+    /**
+     * Permet de déterminer quelles sections sont montantes et quelles sections sont descendantes
+     */
+    private void determineUphillAndDownhillSections() {
+        uphillSections = new ArrayList<>();
+        downhillSections = new ArrayList<>();
         for (TrackSection trackSection : getTrackSections()) {
             if (trackSection.getStartIndex().getElevation() > trackSection.getEndIndex().getElevation()) {
-                trackDescendingSections.add(trackSection);
+                downhillSections.add(trackSection);
             } else {
-                trackRisingSections.add(trackSection);
+                uphillSections.add(trackSection);
             }
         }
     }
@@ -168,6 +174,9 @@ public class Track extends AbstractListenableModel {
         totalDuration = trackPoints.get(trackPoints.size() - 1).getTime().getTime() - trackPoints.get(0).getTime().getTime();
     }
 
+    /**
+     * Permet de renseigner l'altitude maximum et l'altitude minimum du track
+     */
     public void determineMaxAndMinElevation() {
         double maxElevation = 0;
         double minElevation = trackPoints.get(0).getElevation();
