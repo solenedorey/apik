@@ -1,12 +1,10 @@
 package projetAnnuel.views;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import projetAnnuel.models.Track;
 import projetAnnuel.models.TrackLoaderGPX;
 import projetAnnuel.events.MyWindowListener;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -14,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URL;
+import java.util.prefs.Preferences;
 
 public class ApikGUI extends JFrame implements ActionListener {
 
@@ -27,6 +26,7 @@ public class ApikGUI extends JFrame implements ActionListener {
     private GlobalInfoView globalInfoView;
 
     private JFileChooser fileChooser;
+    private Preferences prefs;
 
     public ApikGUI(String title) {
         super(title);
@@ -36,6 +36,8 @@ public class ApikGUI extends JFrame implements ActionListener {
 
         Container contentPane = this.getContentPane();
         contentPane.setLayout(new BorderLayout());
+
+        prefs = Preferences.userRoot();
 
         buildMenu();
 
@@ -67,8 +69,10 @@ public class ApikGUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == loadGPXFileMenuItem) {
+            fileChooser.setCurrentDirectory(new File(prefs.get("LastPath", fileChooser.getFileSystemView().getDefaultDirectory().toString())));
             int returnVal = fileChooser.showOpenDialog(this);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
+                prefs.put("LastPath", fileChooser.getSelectedFile().getAbsolutePath());
                 File file = fileChooser.getSelectedFile();
                 TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
                 track = trackLoaderGPX.loadTrack();
