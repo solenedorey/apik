@@ -21,19 +21,19 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
     private final static int TIME = 1;
     private final static int SPEED_M_S = 2;
     private final static int SPEED_KM_H = 3;
-    private Boolean areAboutSkiDescents;
+    private boolean areAboutDownhills;
 
     private String[] columnName = {"Distance parcourue (m)", "Temps écoulé (min:sec)", "Vitesse moyenne (m/s)", "Vitesse moyenne (km/h)"};
 
-    public TrackToTableModel(Track track, Boolean areAboutSkiDescents) {
+    public TrackToTableModel(Track track, boolean areAboutDownhills) {
         this.track = track;
-        this.areAboutSkiDescents = areAboutSkiDescents;
+        this.areAboutDownhills = areAboutDownhills;
     }
 
     @Override
     public int getRowCount() {
         if (track !=  null) {
-            if (areAboutSkiDescents) {
+            if (areAboutDownhills) {
                 return track.getDownhillSections().size();
             } else {
                 return track.getUphillSections().size();
@@ -51,7 +51,7 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (track != null) {
             TrackSection trackSection;
-            if (areAboutSkiDescents) {
+            if (areAboutDownhills) {
                 trackSection = track.getDownhillSections().get(rowIndex);
             } else {
                 trackSection  = track.getUphillSections().get(rowIndex);
@@ -62,7 +62,7 @@ public class TrackToTableModel extends AbstractTableModel implements ModelListen
                     return decimalFormat.format(trackSection.getDistanceTravelled());
                 case TIME:
                     DateFormat dateFormat = new SimpleDateFormat("mm:ss");
-                    Date duration = new Date(trackSection.getSpentTime());
+                    Date duration = new Date(trackSection.getTimeSpent());
                     return dateFormat.format(duration);
                 case SPEED_M_S:
                     return decimalFormat.format(trackSection.getAverageSpeedInMetersPerSecond());

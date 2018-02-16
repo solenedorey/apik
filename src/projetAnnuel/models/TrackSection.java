@@ -11,7 +11,7 @@ public class TrackSection {
     private TrackPoint startIndex;
     private TrackPoint endIndex;
     private double distanceTravelled;
-    private long spentTime;
+    private long timeSpent;
 
     /**
      * Constructeur
@@ -25,14 +25,14 @@ public class TrackSection {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         computeDistanceTravelled();
-        computeSpentTime();
+        computeTimeSpent();
     }
 
     /**
      * Permet de calculer le temps écoulé entre le point de départ et le point de fin de la section
      */
-    private void computeSpentTime() {
-        spentTime = endIndex.getTime().getTime() - startIndex.getTime().getTime();
+    private void computeTimeSpent() {
+        timeSpent = endIndex.getTime().getTime() - startIndex.getTime().getTime();
     }
 
     /**
@@ -70,8 +70,8 @@ public class TrackSection {
      * @return double
      */
     public double getAverageSpeedInMetersPerSecond() {
-        long spentTimeInSeconds = spentTime / 1000;
-        return distanceTravelled / spentTimeInSeconds;
+        long timeSpentInSeconds = timeSpent / 1000;
+        return distanceTravelled / timeSpentInSeconds;
     }
 
     /**
@@ -90,7 +90,7 @@ public class TrackSection {
         return distanceTravelled;
     }
 
-    public long getSpentTime() {
-        return spentTime;
+    public long getTimeSpent() {
+        return timeSpent;
     }
 }

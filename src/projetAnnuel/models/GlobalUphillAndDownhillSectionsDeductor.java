@@ -2,7 +2,7 @@ package projetAnnuel.models;
 
 import java.util.ArrayList;
 
-public class GlobalUphillAndDownhillSectionDeductor implements SectionDeductorStrategy {
+public class GlobalUphillAndDownhillSectionsDeductor implements SectionsDeductorStrategy {
 
     private final static double METER_RANGE = 400.0;
 

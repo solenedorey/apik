@@ -1,6 +1,7 @@
 package projetAnnuel.views;
 
 import projetAnnuel.models.Track;
+import projetAnnuel.models.TrackLoader;
 import projetAnnuel.models.TrackLoaderGPX;
 import projetAnnuel.events.MyWindowListener;
 
@@ -75,7 +76,7 @@ public class ApikGUI extends JFrame implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 prefs.put("LastPath", fileChooser.getSelectedFile().getAbsolutePath());
                 File file = fileChooser.getSelectedFile();
-                TrackLoaderGPX trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
+                TrackLoader trackLoaderGPX = new TrackLoaderGPX(file.getAbsolutePath());
                 track = trackLoaderGPX.loadTrack();
                 // Chargement du track dans les différentes vues
                 globalInfoView.setTrack(track);

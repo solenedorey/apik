@@ -19,8 +19,8 @@ public class GlobalInfoView extends JPanel implements ModelListener {
     private Track track;
     private JLabel totalDistance;
     private JLabel totalTime;
-    private JLabel descentsNumber;
-    private JLabel ascentsNumber;
+    private JLabel downhillsNumber;
+    private JLabel uphillsNumber;
     private JLabel maxElevation;
     private JLabel minElevation;
 
@@ -33,15 +33,15 @@ public class GlobalInfoView extends JPanel implements ModelListener {
         setLayout(new GridLayout(2,3));
         totalDistance = new JLabel("Distance totale en km : -");
         totalTime = new JLabel("Durée totale : -");
-        descentsNumber = new JLabel("Nombre de descentes : -");
-        ascentsNumber = new JLabel("Nombre de montées : -");
+        downhillsNumber = new JLabel("Nombre de descentes : -");
+        uphillsNumber = new JLabel("Nombre de montées : -");
         maxElevation = new JLabel("Altitude maximale en m : -");
         minElevation = new JLabel("Altitude minimale en m : -");
         add(totalDistance);
-        add(descentsNumber);
+        add(downhillsNumber);
         add(maxElevation);
         add(totalTime);
-        add(ascentsNumber);
+        add(uphillsNumber);
         add(minElevation);
     }
 
@@ -56,8 +56,8 @@ public class GlobalInfoView extends JPanel implements ModelListener {
         Date duration = new Date(track.getTotalDuration());
         totalDistance.setText("Distance totale en km : " + String.valueOf(decimalFormat.format(track.getTotalDistance() / 1000)));
         totalTime.setText("Durée totale : " + dateFormat.format(duration));
-        descentsNumber.setText("Nombre de descentes : " + String.valueOf(track.getDownhillSections().size()));
-        ascentsNumber.setText("Nombre de montées : " + String.valueOf(track.getUphillSections().size()));
+        downhillsNumber.setText("Nombre de descentes : " + String.valueOf(track.getDownhillSections().size()));
+        uphillsNumber.setText("Nombre de montées : " + String.valueOf(track.getUphillSections().size()));
         maxElevation.setText("Altitude maximale en m : " + String.valueOf((int) track.getMaxElevation()));
         minElevation.setText("Altitude minimale en m: " + String.valueOf((int) track.getMinElevation()));
         repaint();

@@ -16,10 +16,8 @@ public class StatsView extends JPanel implements ModelListener {
 
     private Track track;
 
-    private TrackToTableModel trackToDescentsTableModel;
-    private TrackToTableModel trackToAscentsTableModel;
-
-    public static int WIDTH = 400;
+    private TrackToTableModel downhillsTableAdapter;
+    private TrackToTableModel uphillsTableAdapter;
 
     public StatsView() {
         setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),
@@ -27,20 +25,19 @@ public class StatsView extends JPanel implements ModelListener {
                 TitledBorder.CENTER,
                 TitledBorder.TOP));
         setLayout(new GridLayout(2, 1));
-
         track = null;
 
         JPanel descentsPanel = new JPanel();
         descentsPanel.setLayout(new BorderLayout());
-        descentsPanel.setPreferredSize(new Dimension(WIDTH, TrackChart.HEIGHT / 2));
+        descentsPanel.setPreferredSize(new Dimension(400, TrackChart.HEIGHT / 2));
 
         JLabel descentsLabel = new JLabel("Descentes");
         descentsLabel.setForeground(Color.BLUE);
         descentsLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         descentsPanel.add(descentsLabel, BorderLayout.NORTH);
 
-        trackToDescentsTableModel = new TrackToTableModel(track, true);
-        JScrollPane descentsTable = buildTable(trackToDescentsTableModel);
+        downhillsTableAdapter = new TrackToTableModel(track, true);
+        JScrollPane descentsTable = buildTable(downhillsTableAdapter);
         descentsTable.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.BLUE, Color.BLUE));
         descentsPanel.add(descentsTable, BorderLayout.CENTER);
 
@@ -53,8 +50,8 @@ public class StatsView extends JPanel implements ModelListener {
         ascentsLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         ascentsPanel.add(ascentsLabel, BorderLayout.NORTH);
 
-        trackToAscentsTableModel = new TrackToTableModel(track, false);
-        JScrollPane ascentsTable = buildTable(trackToAscentsTableModel);
+        uphillsTableAdapter = new TrackToTableModel(track, false);
+        JScrollPane ascentsTable = buildTable(uphillsTableAdapter);
         ascentsTable.setBorder(new EtchedBorder(EtchedBorder.LOWERED, Color.RED, Color.RED));
         ascentsPanel.add(ascentsTable, BorderLayout.CENTER);
 
@@ -62,7 +59,7 @@ public class StatsView extends JPanel implements ModelListener {
         add(ascentsPanel);
     }
 
-    public JScrollPane buildTable(TrackToTableModel trackToTableModel) {
+    private JScrollPane buildTable(TrackToTableModel trackToTableModel) {
         JTable jTable = new JTable(trackToTableModel);
         MultiLineTableHeaderRenderer multiLineTableHeaderRenderer = new MultiLineTableHeaderRenderer();
         jTable.getTableHeader().setDefaultRenderer(multiLineTableHeaderRenderer);
@@ -78,8 +75,8 @@ public class StatsView extends JPanel implements ModelListener {
         }
         this.track = track;
         track.addListener(this);
-        trackToAscentsTableModel.setTrack(track);
-        trackToDescentsTableModel.setTrack(track);
+        uphillsTableAdapter.setTrack(track);
+        downhillsTableAdapter.setTrack(track);
         repaint();
     }
 

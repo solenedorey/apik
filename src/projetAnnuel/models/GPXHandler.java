@@ -24,7 +24,7 @@ public class GPXHandler extends DefaultHandler {
         timeTag.push("trkpt");
         timeTag.push("time");
         trackPointTag.push("trkpt");
-        track = new Track(new GlobalUphillAndDownhillSectionDeductor());
+        track = new Track(new GlobalUphillAndDownhillSectionsDeductor());
     }
 
     /**

@@ -19,11 +19,9 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
 
     private JLabel noTrackLabel;
 
-    private double metersToPixelsX;
-    private double metersToPixelsY;
-    public static int WIDTH = 800;
-    public static int HEIGHT = 400;
-    public static int PADDING = 60;
+    private int width;
+    private int height;
+    private int padding;
 
     private ArrayList<ChartPoint> chartPoints;
 
@@ -31,11 +29,14 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
     private String elevationLabel;
 
     public TrackChart() {
+        width = 800;
+        height = 400;
+        padding = 60;
         track = null;
         chartPoints = new ArrayList<>();
         noTrackLabel = null;
         setLayout(new BorderLayout());
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setPreferredSize(new Dimension(width, height));
     }
 
     @Override
@@ -49,26 +50,26 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
 
         if (track != null) {
             this.remove(noTrackLabel);
-            WIDTH = getWidth();
-            HEIGHT = getHeight();
-            metersToPixelsX = (WIDTH - PADDING * 2) / track.getTotalDistance();
-            /*metersToPixelsY = HEIGHT / track.getMaxElevation();*/
+            width = getWidth();
+            height = getHeight();
+            double metersToPixelsX = (width - padding * 2) / track.getTotalDistance();
+            /*metersToPixelsY = height / track.getMaxElevation();*/
             double amplitude = track.getMaxElevation() - track.getMinElevation();
-            metersToPixelsY = (HEIGHT - PADDING * 2) / amplitude;
+            double metersToPixelsY = (height - padding * 2) / amplitude;
 
             AffineTransform at = new AffineTransform();
-            at.setToRotation(Math.toRadians(-90), PADDING, PADDING);
+            at.setToRotation(Math.toRadians(-90), padding, padding);
             graphics2D.setTransform(at);
 
-            graphics2D.drawString("Altitude en m", 0, PADDING /2);
+            graphics2D.drawString("Altitude en m", 0, padding /2);
 
             at.setToRotation(Math.toRadians(0));
             graphics2D.setTransform(at);
 
-            graphics2D.drawString("Distance en m", WIDTH - PADDING * 2, HEIGHT - PADDING / 2);
+            graphics2D.drawString("Distance en m", width - padding * 2, height - padding / 2);
 
-            graphics2D.drawLine(PADDING, PADDING, PADDING, HEIGHT - PADDING);
-            graphics2D.drawLine(PADDING, HEIGHT - PADDING, WIDTH - PADDING, HEIGHT - PADDING);
+            graphics2D.drawLine(padding, padding, padding, height - padding);
+            graphics2D.drawLine(padding, height - padding, width - padding, height - padding);
 
             ArrayList<TrackPoint> trackPoints = track.getTrackPoints();
             ArrayList<TrackSection> trackSections = track.getTrackSections();
@@ -80,7 +81,7 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                 color = Color.red;
             }
 
-            double x1 = PADDING;
+            double x1 = padding;
             double y1;
             double x2 = 0;
             double y2 = 0;
@@ -94,10 +95,10 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                     x1 = x2;
                     y1 = y2;
                 } else {
-                    y1 = HEIGHT - PADDING - (trackPoints.get(i).getElevation() - track.getMinElevation()) * metersToPixelsY;
+                    y1 = height - padding - (trackPoints.get(i).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 }
                 x2 = x1 + trackPoints.get(i).getDistanceToNextPoint() * metersToPixelsX;
-                y2 = HEIGHT - PADDING - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
+                y2 = height - padding - (trackPoints.get(i + 1).getElevation() - track.getMinElevation()) * metersToPixelsY;
                 graphics2D.drawLine((int) x1, (int) y1, (int) x2, (int) y2);
                 if (i == 0) {
                     chartPoints.add(new ChartPoint((int) x1, (int) y1, String.valueOf((int) trackPoints.get(i).getElevation())));
@@ -111,7 +112,7 @@ public class TrackChart extends JPanel implements ModelListener, MouseMotionList
                 }
             }
             if (ellipse2D != null && elevationLabel != null) {
-                Boolean isInRightSide = false;
+                boolean isInRightSide = false;
                 if (ellipse2D.getX() > getWidth() / 2) {
                     isInRightSide = true;
                 }

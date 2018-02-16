@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Interface permettant d'implémenter la méthode pour déduire des sections
  */
-public interface SectionDeductorStrategy {
+public interface SectionsDeductorStrategy {
 
     /**
      * Permet de déduire des sections à partir d'un track
