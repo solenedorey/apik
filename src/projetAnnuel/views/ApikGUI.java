@@ -103,6 +103,7 @@ public class ApikGUI extends JFrame implements ActionListener {
         FileNameExtensionFilter filter = new FileNameExtensionFilter("GPX files", "gpx");
         fileChooser = new JFileChooser();
         fileChooser.setFileFilter(filter);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
         //Create the menu bar.
         JMenuBar menuBar = new JMenuBar();
@@ -158,11 +159,11 @@ public class ApikGUI extends JFrame implements ActionListener {
 
         ButtonGroup ordinateSettingsButtonGroup = new ButtonGroup();
         rbMenuItem = new JRadioButtonMenuItem("Niveau de la mer");
-        rbMenuItem.setSelected(true);
         ordinateSettingsButtonGroup.add(rbMenuItem);
         submenu.add(rbMenuItem);
 
-        rbMenuItem = new JRadioButtonMenuItem("Altitude minimale station");
+        rbMenuItem = new JRadioButtonMenuItem("Altitude minimale track");
+        rbMenuItem.setSelected(true);
         ordinateSettingsButtonGroup.add(rbMenuItem);
         submenu.add(rbMenuItem);
 
